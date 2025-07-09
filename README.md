@@ -71,7 +71,53 @@ reduction = 100 * (1 - singlora_params / original_params)
 print(f"Parameter reduction: {reduction:.2f}%")
 ```
 
+## Complete Example
+
 For a complete working example, see `example.py` in the repository.
+
+### example.py output 
+```txt
+Applying SingLoRA to the model...
+Replaced 'q_lin' with SingLoRA layer.
+Replaced 'k_lin' with SingLoRA layer.
+Replaced 'v_lin' with SingLoRA layer.
+Replaced 'q_lin' with SingLoRA layer.
+Replaced 'k_lin' with SingLoRA layer.
+Replaced 'v_lin' with SingLoRA layer.
+Replaced 'q_lin' with SingLoRA layer.
+Replaced 'k_lin' with SingLoRA layer.
+Replaced 'v_lin' with SingLoRA layer.
+Replaced 'q_lin' with SingLoRA layer.
+Replaced 'k_lin' with SingLoRA layer.
+Replaced 'v_lin' with SingLoRA layer.
+Replaced 'q_lin' with SingLoRA layer.
+Replaced 'k_lin' with SingLoRA layer.
+Replaced 'v_lin' with SingLoRA layer.
+Replaced 'q_lin' with SingLoRA layer.
+Replaced 'k_lin' with SingLoRA layer.
+Replaced 'v_lin' with SingLoRA layer.
+
+--- Original Model Structure (Sample) ---
+Linear(in_features=768, out_features=768, bias=True)
+
+--- Model Structure After Applying SingLoRA (Sample) ---
+SingLoRALayer(rank=8, alpha=8.0, ramp_up_steps=1000, original_layer=Linear(in_features=768, out_features=768, bias=True))
+
+Original trainable parameters: 66,955,010
+SingLoRA trainable parameters: 56,434,946
+Parameter reduction: 15.71% (compared to full fine-tuning)
+
+Creating a dummy dataset for demonstration...
+
+Starting training...
+Epoch 1/3 | Average Loss: 0.2366
+Epoch 2/3 | Average Loss: 0.0002
+Epoch 3/3 | Average Loss: 0.0000
+
+Training finished successfully!
+Note the 'training_step' counter in a SingLoRA layer has been updated:
+Final training step for one layer: 15
+```
 
 ### LLaMA Example
 
