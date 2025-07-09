@@ -21,22 +21,57 @@ pip install -r requirements.txt
 
 ## Usage
 
-The implementation consists of two main components:
+### Basic Example
 
-1. The SingLoRA implementation in `singlora/main.py`
-2. A complete usage example in `example.py`
+Here's a simple example of how to apply SingLoRA to a transformer model:
 
-To run the example:
+```python
+from singlora import apply_singlora_to_model
+from transformers import AutoModelForSequenceClassification
 
-```bash
-python example.py
+# Load your model
+model = AutoModelForSequenceClassification.from_pretrained("distilbert-base-uncased")
+
+# Apply SingLoRA
+apply_singlora_to_model(
+    model=model,
+    rank=8,              # Low-rank dimension (r in the paper)
+    alpha=8.0,           # Scaling factor
+    ramp_up_steps=1000,  # Steps for ramp-up function u(t)
+    target_modules=["q_lin", "k_lin", "v_lin"]  # Target attention layers
+)
+
+# Now only the SingLoRA parameters are trainable
+optimizer = torch.optim.AdamW(
+    filter(lambda p: p.requires_grad, model.parameters()),
+    lr=1e-3
+)
 ```
 
-The example demonstrates:
-- Applying SingLoRA to a DistilBERT model
-- Comparing model parameters before and after SingLoRA application
-- Training the model on a dummy dataset
-- Proper handling of the ramp-up period
+### Configuration Parameters
+
+- `rank`: The dimension of the low-rank adaptation (r). Lower values mean fewer parameters.
+- `alpha`: Scaling factor for the adaptation. Higher values allow larger updates.
+- `ramp_up_steps`: Number of steps (T) for the ramp-up function u(t) = min(t/T, 1).
+- `target_modules`: List of layer names to apply SingLoRA to. Common targets:
+  - `["query", "key", "value"]` for standard transformers
+  - `["q_lin", "k_lin", "v_lin"]` for DistilBERT
+  - `["q_proj", "k_proj", "v_proj"]` for LLaMA models
+
+### Parameter Efficiency
+
+SingLoRA significantly reduces the number of trainable parameters compared to full fine-tuning:
+
+```python
+# Example parameter counts
+original_params = sum(p.numel() for p in original_model.parameters() if p.requires_grad)
+singlora_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+
+reduction = 100 * (1 - singlora_params / original_params)
+print(f"Parameter reduction: {reduction:.2f}%")
+```
+
+For a complete working example, see `example.py` in the repository.
 
 ## Citation
 
