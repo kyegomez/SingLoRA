@@ -1,67 +1,59 @@
-[![Multi-Modality](agorabanner.png)](https://discord.com/servers/agora-999382051935506503)
+# SingLoRA: A Minimal Implementation
 
-# Python Package Template
+This repository provides a minimal, single-file implementation of SingLoRA (Single Matrix Low-Rank Adaptation) as described in the paper ["SingLoRA: Low Rank Adaptation Using a Single Matrix"](https://arxiv.org/abs/2507.05566) by Bensaïd et al.
 
-[![Join our Discord](https://img.shields.io/badge/Discord-Join%20our%20server-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/agora-999382051935506503) [![Subscribe on YouTube](https://img.shields.io/badge/YouTube-Subscribe-red?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@kyegomez3242) [![Connect on LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/kye-g-38759a207/) [![Follow on X.com](https://img.shields.io/badge/X.com-Follow-1DA1F2?style=for-the-badge&logo=x&logoColor=white)](https://x.com/kyegomezb)
+## Overview
 
-A easy, reliable, fluid template for python packages complete with docs, testing suites, readme's, github workflows, linting and much much more
+SingLoRA is a parameter-efficient fine-tuning method that simplifies the LoRA architecture by using a single trainable matrix instead of two. This implementation demonstrates how to apply SingLoRA to transformer models using PyTorch and the Hugging Face Transformers library.
 
+## Features
+
+- Simple, self-contained implementation in a single Python file
+- Compatible with Hugging Face Transformers models
+- Includes a working example with DistilBERT
+- Demonstrates parameter reduction compared to full fine-tuning
 
 ## Installation
 
-You can install the package using pip
+```bash
+pip install -r requirements.txt
+```
+
+## Usage
+
+The implementation consists of two main components:
+
+1. The SingLoRA implementation in `singlora/main.py`
+2. A complete usage example in `example.py`
+
+To run the example:
 
 ```bash
-pip install -e .
+python example.py
 ```
 
-# Usage
-```python
-print("hello world")
+The example demonstrates:
+- Applying SingLoRA to a DistilBERT model
+- Comparing model parameters before and after SingLoRA application
+- Training the model on a dummy dataset
+- Proper handling of the ramp-up period
 
+## Citation
+
+If you use this implementation in your research, please cite the original paper:
+
+```bibtex
+@misc{bensaïd2025singloralowrankadaptation,
+      title={SingLoRA: Low Rank Adaptation Using a Single Matrix}, 
+      author={David Bensaïd and Noam Rotstein and Roy Velich and Daniel Bensaïd and Ron Kimmel},
+      year={2025},
+      eprint={2507.05566},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2507.05566}, 
+}
 ```
 
+## License
 
-
-### Code Quality 🧹
-
-- `make style` to format the code
-- `make check_code_quality` to check code quality (PEP8 basically)
-- `black .`
-- `ruff . --fix`
-
-### Tests 🧪
-
-[`pytests`](https://docs.pytest.org/en/7.1.x/) is used to run our tests.
-
-### Publish on PyPi 🚀
-
-**Important**: Before publishing, edit `__version__` in [src/__init__](/src/__init__.py) to match the wanted new version.
-
-```
-poetry build
-poetry publish
-```
-
-### CI/CD 🤖
-
-We use [GitHub actions](https://github.com/features/actions) to automatically run tests and check code quality when a new PR is done on `main`.
-
-On any pull request, we will check the code quality and tests.
-
-When a new release is created, we will try to push the new code to PyPi. We use [`twine`](https://twine.readthedocs.io/en/stable/) to make our life easier. 
-
-The **correct steps** to create a new realease are the following:
-- edit `__version__` in [src/__init__](/src/__init__.py) to match the wanted new version.
-- create a new [`tag`](https://git-scm.com/docs/git-tag) with the release name, e.g. `git tag v0.0.1 && git push origin v0.0.1` or from the GitHub UI.
-- create a new release from GitHub UI
-
-The CI will run when you create the new release.
-
-# Docs
-We use MK docs. This repo comes with the zeta docs. All the docs configurations are already here along with the readthedocs configs.
-
-
-
-# License
-MIT
+This project is licensed under the MIT License - see the LICENSE file for details.
