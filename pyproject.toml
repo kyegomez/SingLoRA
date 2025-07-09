@@ -3,16 +3,16 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-name = "paper"
+name = "singlora"
 version = "0.0.1"
-description = "Paper - Pytorch"
+description = "SingLoRA - Pytorch"
 license = "MIT"
 authors = ["Kye Gomez <kye@apac.ai>"]
-homepage = "https://github.com/kyegomez/paper"
-documentation = "https://github.com/kyegomez/paper"  # Add this if you have documentation.
+homepage = "https://github.com/kyegomez/singlora"
+documentation = "https://github.com/kyegomez/singlora"  # Add this if you have documentation.
 readme = "README.md"  # Assuming you have a README.md
-repository = "https://github.com/kyegomez/paper"
-keywords = ["artificial intelligence", "deep learning", "optimizers", "Prompt Engineering"]
+repository = "https://github.com/kyegomez/singlora"
+keywords = ["artificial intelligence", "deep learning", "optimizers", "Prompt Engineering", "SingLoRA", "LLM", "Pytorch", "Pytorch Lightning"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -23,11 +23,8 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-swarms = "*"
-zetascale = "*"
-
-[tool.poetry.dev-dependencies]
-# Add development dependencies here
+torch = "*"
+transformers = "*"
 
 
 [tool.poetry.group.lint.dependencies]

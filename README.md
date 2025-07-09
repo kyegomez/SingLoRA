@@ -16,7 +16,7 @@ SingLoRA is a parameter-efficient fine-tuning method that simplifies the LoRA ar
 ## Installation
 
 ```bash
-pip install -r requirements.txt
+pip3 install -U singlora
 ```
 
 ## Usage
@@ -72,6 +72,65 @@ print(f"Parameter reduction: {reduction:.2f}%")
 ```
 
 For a complete working example, see `example.py` in the repository.
+
+### LLaMA Example
+
+Here's how to apply SingLoRA to LLaMA models:
+
+```python
+from singlora import apply_singlora_to_model
+from transformers import LlamaForCausalLM, LlamaTokenizer
+import torch
+
+# Load LLaMA model and tokenizer
+model_name = "meta-llama/Llama-2-7b-hf"  # or your local path
+model = LlamaForCausalLM.from_pretrained(
+    model_name,
+    torch_dtype=torch.float16,  # Use float16 for efficiency
+    device_map="auto"           # Automatically handle model placement
+)
+tokenizer = LlamaTokenizer.from_pretrained(model_name)
+
+# Apply SingLoRA to attention layers
+apply_singlora_to_model(
+    model=model,
+    rank=16,              # Can use larger rank for bigger models
+    alpha=16.0,           # Increased alpha for stronger adaptation
+    ramp_up_steps=2000,   # More steps for larger datasets
+    target_modules=[      # LLaMA-specific attention layer names
+        "q_proj",
+        "k_proj",
+        "v_proj"
+    ]
+)
+
+# Example training setup
+optimizer = torch.optim.AdamW(
+    filter(lambda p: p.requires_grad, model.parameters()),
+    lr=1e-4  # Lower learning rate for LLaMA
+)
+
+# Example inference
+prompt = "Once upon a time"
+inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+
+with torch.no_grad():
+    outputs = model.generate(
+        **inputs,
+        max_length=100,
+        temperature=0.7,
+        do_sample=True
+    )
+
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))
+```
+
+Key differences for LLaMA models:
+- Use `LlamaForCausalLM` instead of standard transformer models
+- Target the LLaMA-specific projection layers (`q_proj`, `k_proj`, `v_proj`)
+- Consider using `float16` for memory efficiency
+- Adjust hyperparameters (`rank`, `alpha`, learning rate) for larger models
+- Use `device_map="auto"` for automatic model sharding on multiple GPUs
 
 ## Citation
 
